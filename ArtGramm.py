@@ -13,10 +13,17 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 import hashlib, os, json, base64, io, uuid, time, threading
 import requests as req
+import threading
+threading.stack_size(33554432)  # увеличить стек
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artgramm.db'
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+    'pool_recycle': 300,
+    'pool_use_lifo': True
+}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
